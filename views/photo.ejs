@@ -1,62 +1,49 @@
 <%- include('partials/_header') -%>
-<!--
 
-TemplateMo 552 Video Catalog
-
-https://templatemo.com/tm-552-video-catalog
-
--->
 <body>
-	<div class="tm-page-wrap mx-auto">
+    <div class="tm-page-wrap mx-auto">
+        <%- include('partials/_navigation') -%>
+
+        <div class="container-fluid">
+            <div class="mx-auto tm-content-container">
+                <main>
+                    <div class="row mb-5 pb-4">
+                        <div class="col-12">
+                            <% if (photo.image) { %>
+                                <img src="<%= photo.image %>" alt="<%= photo.title %>" class="img-fluid tm-catalog-item-img" style="width: 100%; height: 450px; object-fit: cover;">
+                            <% } else { %>
+                                <div style="width: 100%; height: 450px; background-color: #f2f2f2; display: flex; align-items: center; justify-content: center;">
+                                    <span style="color: #ccc; font-size: 1.2rem;">Görsel Yüklenmemiş</span>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5 pb-5">
+                        <div class="col-xl-8 col-lg-7">
+                            <div class="tm-video-description-box">
+                                <h2 class="mb-3 tm-video-title" style="color: #333;"><%= photo.title %></h2>
+                                <p class="mb-4" style="color: #666;"><%= photo.description %></p>   
+                            </div>                          
+                        </div>
+
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="tm-bg-gray tm-share-box text-center p-5">
+                                <a href="/photos/edit/<%= photo._id %>" class="btn btn-primary d-block mb-4" style="border-radius: 0; padding: 15px; font-weight: bold; font-size: 1.1rem;">
+                                    Update Details
+                                </a>   
+                                <a href="/photos/<%= photo._id %>?_method=DELETE" class="btn btn-danger d-block" style="border-radius: 0; padding: 15px; font-weight: bold; font-size: 1.1rem;">
+                                    Delete Photo
+                                </a>   
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
         
-		<%- include('partials/_navigation') -%>
-
-		<!-- Page content -->
-		<div class="container-fluid">
-			<div class="mx-auto tm-content-container">
-				<main>
-					<div class="row mb-5 pb-4">
-						<div class="col-12">
-							<img src="img/video-detail-1.jpg" alt="Image" class="img-fluid tm-catalog-item-img">
-						</div>
-					</div>
-					<div class="row mb-5 pb-5">
-						<div class="col-xl-8 col-lg-7">
-							<!-- Video description -->
-							<div class="tm-video-description-box">
-								<h2 class="mb-5 tm-video-title">Mauris dapibus urna nec ipsum posuere</h2>
-								<p class="mb-4">Cras dictum pretium est, et imperdiet ex. Fusce vitae vestibulum ipsum. Maecenas ultricies ipsum a urna ullamcorper, id interdum est blandit. Vivamus sit amet justo sed erat iaculis consequat. Nulla suscipit posuere lectus ut venenatis. Proin sed orci eget tellus euismod vulputate eu eu arcu.</p>	
-							</div>							
-						</div>
-						<div class="col-xl-4 col-lg-5">
-							<!-- Share box -->
-							<div class="tm-bg-gray tm-share-box">
-								<div class="text-center">
-									<button class="btn btn-primary p-0 mb-4 tm-btn-animate tm-btn-download tm-icon-download"><span>Update Details</span></button>	
-								</div>	
-								<div class="text-center">
-									<button class="btn btn-danger p-0 tm-btn-animate tm-btn-download tm-icon-download"><span>Delete Photo</span></button>	
-								</div>								
-							</div>
-						</div>
-					</div>
-				</main>
-
-                <%- include('partials/_footer') -%>
-
-    <script>
-    	$(document).ready(function() {
-    		$('.tm-likes-box').click(function(e) {
-    			e.preventDefault();
-    			$(this).toggleClass('tm-liked');
-
-    			if($(this).hasClass('tm-liked')) {
-    				$('#tm-likes-count').html('486 likes');
-    			} else {
-    				$('#tm-likes-count').html('485 likes');
-    			}
-    		});
-    	});
-    </script>
+        <%- include('partials/_footer') -%>
+        
+    </div>
 </body>
 </html>
