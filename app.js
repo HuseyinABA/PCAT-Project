@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require("mongoose");
 const ejs = require('ejs');
 const fileUpload = require('express-fileupload');
-const methodOverride = require('method-override'); // Yeni paketimiz
+const methodOverride = require('method-override');
 const path = require('path');
 const fs = require('fs');
 const Photo = require('./models/Photo');
@@ -20,7 +20,6 @@ app.use(express.static("public"));
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(fileUpload());
-// method-override middleware'i (Formlardaki ?_method parametresini yakalar)
 app.use(methodOverride('_method', {
   methods: ['POST', 'GET']
 }));
@@ -67,7 +66,6 @@ app.post("/photos", async (req, res) => {
   });
 });
 
-// Güncelleme Sayfasını Gösterme Rotası
 app.get('/photos/edit/:id', async (req, res) => {
   const photo = await Photo.findOne({ _id: req.params.id });
   res.render('edit', {
@@ -75,7 +73,6 @@ app.get('/photos/edit/:id', async (req, res) => {
   });
 });
 
-// Güncelleme İşlemini Gerçekleştirme Rotası (PUT)
 app.put('/photos/:id', async (req, res) => {
   const photo = await Photo.findOne({ _id: req.params.id });
   photo.title = req.body.title;
@@ -83,6 +80,24 @@ app.put('/photos/:id', async (req, res) => {
   photo.save();
 
   res.redirect(`/photos/${req.params.id}`);
+});
+
+// YENİ EKLENEN KISIM: Fotoğraf Silme Rotası (DELETE)
+app.delete('/photos/:id', async (req, res) => {
+  const photo = await Photo.findOne({ _id: req.params.id });
+  
+  // Fotoğrafın dosya yolunu buluyoruz
+  let deletedImage = __dirname + '/public' + photo.image;
+  
+  // Eğer sunucuda (uploads klasöründe) böyle bir dosya gerçekten varsa, fiziksel olarak siliyoruz
+  if (fs.existsSync(deletedImage)) {
+    fs.unlinkSync(deletedImage);
+  }
+
+  // Veritabanından fotoğrafı siliyoruz
+  await Photo.findByIdAndDelete(req.params.id);
+  
+  res.redirect('/');
 });
 
 const port = 3000;
