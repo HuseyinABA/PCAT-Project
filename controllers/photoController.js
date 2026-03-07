@@ -2,9 +2,24 @@ const Photo = require('../models/Photo');
 const fs = require('fs');
 
 exports.getAllPhotos = async (req, res) => {
-  const photos = await Photo.find({}).sort('-dateCreated');
+  // Sayfalama (Pagination) Ayarları
+  const page = req.query.page || 1; // Eğer URL'de sayfa yoksa varsayılan olarak 1. sayfayı aç
+  const photosPerPage = 3; // Her sayfada kaç fotoğraf gösterileceğini belirliyoruz (Temaya uygun olması için 3 ideal)
+
+  // Veritabanındaki toplam fotoğraf sayısını buluyoruz
+  const totalPhotos = await Photo.find().countDocuments();
+
+  // Fotoğrafları sayfa numarasına göre atlayarak (skip) ve sınırlayarak (limit) çekiyoruz
+  const photos = await Photo.find({})
+    .sort('-dateCreated')
+    .skip((page - 1) * photosPerPage)
+    .limit(photosPerPage);
+
+  // Verileri index.ejs'ye gönderiyoruz
   res.render('index', {
-    photos
+    photos: photos,
+    current: page,
+    pages: Math.ceil(totalPhotos / photosPerPage) // Toplam sayfa sayısını yukarı yuvarlayarak buluyoruz
   });
 };
 
@@ -23,7 +38,6 @@ exports.createPhoto = async (req, res) => {
   }
 
   let uploadedImage = req.files.image;
-  // DİKKAT: /../ eklendi çünkü artık controllers klasörü içindeyiz
   let uploadPath = __dirname + '/../public/uploads/' + uploadedImage.name;
 
   uploadedImage.mv(uploadPath, async () => {

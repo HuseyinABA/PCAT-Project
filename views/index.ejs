@@ -40,6 +40,21 @@
                         </div>
                         <% } %>
                     </div>
+
+                    <div class="row tm-mb-90" style="margin-top: 30px;">
+                        <div class="col-12 d-flex justify-content-between align-items-center tm-paging-col">
+                            <a href="/?page=<%= current == 1 ? 1 : current - 1 %>" class="btn btn-primary tm-btn-prev mb-2 <%= current == 1 ? 'disabled' : '' %>">Previous</a>
+                            
+                            <div class="tm-paging d-flex">
+                                <% for (let i = 1; i <= pages; i++) { %>
+                                    <a href="/?page=<%= i %>" class="<%= i == current ? 'active' : '' %> tm-paging-link"><%= i %></a>
+                                <% } %>
+                            </div>
+                            
+                            <a href="/?page=<%= current == pages ? pages : Number(current) + 1 %>" class="btn btn-primary tm-btn-next <%= current == pages ? 'disabled' : '' %>">Next</a>
+                        </div>
+                    </div>
+
                 </main>
                 <%- include('partials/_footer') -%>
             </div>
